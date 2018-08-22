@@ -1,11 +1,17 @@
 package com.example.betterwine.pokedodata.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
 
+import com.example.betterwine.locateddemo.RecyclerViewItemTouchListener;
+import com.example.betterwine.pokedodata.Adapter.TourismAdapter;
 import com.example.betterwine.pokedodata.Model.tourism;
 import com.example.betterwine.pokedodata.R;
 
@@ -21,6 +27,8 @@ import butterknife.ButterKnife;
 
 public class TourismActivity extends AppCompatActivity {
     private ArrayList<tourism> mList=new ArrayList<>();
+    private LinearLayoutManager manager;
+    private TourismAdapter tourismAdapter;
 
     @BindView(R.id.tourism_recy)
     RecyclerView tourismRecy;
@@ -31,6 +39,11 @@ public class TourismActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tourism);
         ButterKnife.bind(this);
 
+        initData();
+        initView();
+    }
+    public void initData()
+    {
         NewsThread newsThread=new NewsThread("http://www.mafengwo.cn/gonglve/");
         newsThread.start();
         try {
@@ -39,6 +52,27 @@ public class TourismActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         mList=newsThread.List;
+    }
+    public void initView()
+    {
+        manager=new LinearLayoutManager(TourismActivity.this);
+        tourismRecy.setLayoutManager(manager);
+        tourismAdapter=new TourismAdapter(TourismActivity.this,mList);
+        tourismRecy.setAdapter(tourismAdapter);
+        tourismRecy.addOnItemTouchListener(new RecyclerViewItemTouchListener(tourismRecy, new RecyclerViewItemTouchListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view) {
+                int position=tourismRecy.getChildAdapterPosition(view);
+                Intent i=new Intent(TourismActivity.this,DataActivity.class);
+                i.putExtra("url",mList.get(position).getUrl());
+                startActivity(i);
+            }
+
+            @Override
+            public void onItemLongClick(View view) {
+
+            }
+        }));
     }
 
     public class NewsThread extends Thread{

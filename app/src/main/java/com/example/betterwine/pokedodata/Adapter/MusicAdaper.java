@@ -10,7 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.betterwine.pokedodata.Model.tourism;
+import com.example.betterwine.pokedodata.Model.Music;
+import com.example.betterwine.pokedodata.Model.douban;
 import com.example.betterwine.pokedodata.R;
 
 import java.util.ArrayList;
@@ -18,13 +19,12 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TourismAdapter extends RecyclerView.Adapter<TourismAdapter.ViewHolder> {
-
+public class MusicAdaper extends RecyclerView.Adapter<MusicAdaper.ViewHolder> {
 
     private Context mContext;
-    private ArrayList<tourism> mList = new ArrayList<>();
+    private ArrayList<douban> mList = new ArrayList<>();
 
-    public TourismAdapter(Context context, ArrayList<tourism> list) {
+    public MusicAdaper(Context context, ArrayList<douban> list) {
         this.mContext = context;
         this.mList = list;
     }
@@ -32,14 +32,14 @@ public class TourismAdapter extends RecyclerView.Adapter<TourismAdapter.ViewHold
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        return new ViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item_tourism, viewGroup, false));
+        View v = LayoutInflater.from(mContext).inflate(R.layout.item_music, viewGroup, false);
+        return new ViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        Glide.with(mContext).load(mList.get(i).getImg()).asBitmap().into(viewHolder.tourismImg);
-        viewHolder.tourismTitle.setText(mList.get(i).getTitle());
-        viewHolder.tourismSummary.setText(mList.get(i).getSummary());
+        Glide.with(mContext).load(mList.get(i).getImg()).asBitmap().into(viewHolder.musicImg);
+        viewHolder.musicName.setText(mList.get(i).getStr());
     }
 
     @Override
@@ -48,15 +48,13 @@ public class TourismAdapter extends RecyclerView.Adapter<TourismAdapter.ViewHold
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.tourism_title)
-        TextView tourismTitle;
-        @BindView(R.id.tourism_summary)
-        TextView tourismSummary;
-        @BindView(R.id.tourism_img)
-        ImageView tourismImg;
+        @BindView(R.id.music_img)
+        ImageView musicImg;
+        @BindView(R.id.music_name)
+        TextView musicName;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            ButterKnife.bind(this,itemView);
         }
     }
 }

@@ -44,27 +44,32 @@ public class DataActivity extends AppCompatActivity {
         }
 
 
-        String sHead=   "<html><head><meta name=\"viewport\" content=\"width=device-width, " +
-                "initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes\" />"+
-                "<style>img{max-width:100% !important;height:auto !important;}</style>"
-                +"<style>body{max-width:100% !important;}</style>"+"</head><body>";
+//        String sHead=   "<html><head><meta name=\"viewport\" content=\"width=device-width, " +
+//                "initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes\" />"+
+//                "<style>img{max-width:100% !important;height:auto !important;}</style>"
+//                +"<style>body{max-width:100% !important;}</style>"+"</head><body>";
+//
+//        NewsThread newsThread=new NewsThread("http://www.mafengwo.cn/gonglve/");
+//        newsThread.start();
+//        try {
+//            newsThread.join();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        String regex1="<p>([\\s\\S]*)</p>";
+//        Pattern p1=Pattern.compile(regex1);
+//        Matcher m1=p1.matcher(newsThread.NewsText);
 
-        NewsThread newsThread=new NewsThread("http://www.mafengwo.cn/gonglve/");
+        String text=getIntent().getStringExtra("url");
+        NewsThread newsThread=new NewsThread(text);
         newsThread.start();
         try {
             newsThread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-//        String regex1="<p>([\\s\\S]*)</p>";
-//        Pattern p1=Pattern.compile(regex1);
-//        Matcher m1=p1.matcher(newsThread.NewsText);
-
         checkweb.loadDataWithBaseURL(null,newsThread.NewsText,"text/html","utf-8",null);
     }
-
-
-
     public class NewsThread extends Thread{
         private String NewsText;
         private String url;
@@ -79,26 +84,11 @@ public class DataActivity extends AppCompatActivity {
             super.run();
             try{
                 Document doc = Jsoup.connect(url).get();
-                Elements elements = doc.select("div.feed-item").select("._j_feed_item");
-                for (Element link : elements) {
-                        tourism tourism=new tourism();
-                        tourism.setImg(link.select("img").get(0).attr("src"));
-                        tourism.setSummary(link.select("div.info").text());
-                        tourism.setTitle(link.select("div.title").text());
-                        tourism.setUrl(link.select("a").attr("href"));
-                        mList.add(tourism);
-                }
-                for(int i=0;i<mList.size();i++)
-                {
-                    Log.i("tag==",mList.get(i).getTitle());
-                    Log.i("tag==",mList.get(i).getSummary());
-                    Log.i("tag==",mList.get(i).getImg());
-                    Log.i("tag==",mList.get(i).getUrl());
-                }
                 NewsText=doc.html();
             }catch(Exception e) {
                 Log.i("mytag", e.toString());
             }
         }
     }
+
 }

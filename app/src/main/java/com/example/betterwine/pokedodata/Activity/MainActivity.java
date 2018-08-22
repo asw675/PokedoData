@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
     void initData() {
         Integer funcIcon[] = {R.mipmap.news, R.mipmap.wenzi, R.mipmap.data, R.mipmap.lvyou,
                 R.mipmap.xuexi, R.mipmap.yule, R.mipmap.xiakan, R.mipmap.other};
-        String funcName[] = {"新闻", "文字", "实时数据", "旅游", "学习", "娱乐", "瞎看", "其他"};
+        String funcName[] = {"新闻", "文字", "音乐", "旅游", "学习", "电影", "瞎看", "其他"};
 
         for (int i = 0; i < 8; i++)
         {
@@ -110,9 +110,17 @@ public class MainActivity extends AppCompatActivity {
                 {
                     startActivity(new Intent(MainActivity.this,XiaActivity.class));
                 }
-                if(mList.get(position).getListname().equals("实时数据"))
+                if(mList.get(position).getListname().equals("旅游"))
                 {
-                    startActivity(new Intent(MainActivity.this,DataActivity.class));
+                    startActivity(new Intent(MainActivity.this,TourismActivity.class));
+                }
+                if(mList.get(position).getListname().equals("音乐"))
+                {
+                    startActivity(new Intent(MainActivity.this,MusicActivity.class));
+                }
+                if(mList.get(position).getListname().equals("电影"))
+                {
+                    startActivity(new Intent(MainActivity.this,MovieActivity.class));
                 }
             }
 
