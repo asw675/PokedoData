@@ -38,7 +38,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activity.NewsActivity">
+        <activity android:name=".Activity.NewsActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
         </activity>
         <activity android:name=".Activity.MinimalExpandableExampleActivity">
@@ -48,10 +49,12 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
         </activity>
-        <activity android:name=".Activity.DataActivity">
+        <activity android:name=".Activity.DataActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
         </activity>
-        <activity android:name=".Activity.TourismActivity">
+        <activity android:name=".Activity.TourismActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
         </activity>
 
@@ -66,6 +69,26 @@
 
         </activity>
         <activity android:name=".Activity.MovieDetailActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            >
+
+        </activity>
+        <activity android:name=".Activity.BookActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            >
+
+        </activity>
+        <activity android:name=".Activity.BookDetailActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            >
+
+        </activity>
+        <activity android:name=".Activity.PictureActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
+        </activity>
+
+        <activity android:name=".Activity.PictureDetailActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             >
 

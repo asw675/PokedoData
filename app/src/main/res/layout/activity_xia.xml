@@ -22,6 +22,7 @@
         android:layout_margin="5dp">
 
         <TextView
+            android:text="没有东西哦，请刷新一下"
             android:gravity="center"
             android:id="@+id/xia_title"
             android:textStyle="bold"

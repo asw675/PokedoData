@@ -6,7 +6,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -32,6 +34,8 @@ public class TourismActivity extends AppCompatActivity {
 
     @BindView(R.id.tourism_recy)
     RecyclerView tourismRecy;
+    @BindView(R.id.douban_Toolbar)
+    Toolbar doubanToolbar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,6 +59,9 @@ public class TourismActivity extends AppCompatActivity {
     }
     public void initView()
     {
+        setSupportActionBar(doubanToolbar);
+        doubanToolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_black_24dp);
+        getSupportActionBar().setTitle("旅游");
         manager=new LinearLayoutManager(TourismActivity.this);
         tourismRecy.setLayoutManager(manager);
         tourismAdapter=new TourismAdapter(TourismActivity.this,mList);
@@ -111,5 +118,12 @@ public class TourismActivity extends AppCompatActivity {
                 Log.i("mytag", e.toString());
             }
         }
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==android.R.id.home){
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

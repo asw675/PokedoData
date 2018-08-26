@@ -7,14 +7,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.betterwine.pokedodata.Adapter.NewsAdapter;
 import com.example.betterwine.pokedodata.Interface.RetrofitInterface;
 import com.example.betterwine.pokedodata.Model.News;
 import com.example.betterwine.pokedodata.Model.NewsTitle;
-import com.example.betterwine.pokedodata.Model.mainlist;
 import com.example.betterwine.pokedodata.R;
 import com.h6ah4i.android.widget.advrecyclerview.expandable.RecyclerViewExpandableItemManager;
 
@@ -36,16 +38,23 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class NewsActivity extends AppCompatActivity{
+public class NewsActivity extends AppCompatActivity {
 
     @BindView(R.id.news)
     RecyclerView mRecy;
+    @BindView(R.id.douban_Toolbar)
+    Toolbar doubanToolbar;
+    @BindView(R.id.hint_text)
+    TextView hintText;
+    @BindView(R.id.refresh)
+    FloatingActionButton refresh;
 
-    private ArrayList<String> mList=new ArrayList<>();
-    private ArrayList<NewsTitle> mNews=new ArrayList<>();
-    private String[] Title1=new String[7];
-    private String[] Title2=new String[7];
-    private String[] Text=new String[7];
+
+    private ArrayList<String> mList = new ArrayList<>();
+    private ArrayList<NewsTitle> mNews = new ArrayList<>();
+    private String[] Title1 = new String[7];
+    private String[] Title2 = new String[7];
+    private String[] Text = new String[7];
     private NewsAdapter newsAdapter;
     private RecyclerViewExpandableItemManager expMgr;
 
@@ -60,30 +69,37 @@ public class NewsActivity extends AppCompatActivity{
         initView();
     }
 
-    void initData()
-    {
+    void initData() {
 
     }
-    public void initView()
-    {
+
+    public void initView() {
+        setSupportActionBar(doubanToolbar);
+        doubanToolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_black_24dp);
+        getSupportActionBar().setTitle("新闻");
         expMgr = new RecyclerViewExpandableItemManager(null);
-        LinearLayoutManager manager=new LinearLayoutManager(NewsActivity.this);
+        LinearLayoutManager manager = new LinearLayoutManager(NewsActivity.this);
         mRecy.setLayoutManager(manager);
-        newsAdapter=new NewsAdapter(mNews,NewsActivity.this);
+        newsAdapter = new NewsAdapter(mNews, NewsActivity.this);
         mRecy.setAdapter(expMgr.createWrappedAdapter(newsAdapter));
         ((SimpleItemAnimator) mRecy.getItemAnimator()).setSupportsChangeAnimations(false);
         expMgr.attachRecyclerView(mRecy);
+        refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getNews();
+            }
+        });
     }
 
-    public void getNews()
-    {
+    public void getNews() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://www.apiopen.top/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
 
-        RetrofitInterface retrofitInterface=retrofit.create(RetrofitInterface.class);
+        RetrofitInterface retrofitInterface = retrofit.create(RetrofitInterface.class);
 
         retrofitInterface.getNews()
                 .subscribeOn(Schedulers.io())
@@ -100,8 +116,7 @@ public class NewsActivity extends AppCompatActivity{
                     }
 
                     @Override
-                    public void onNext(News news)
-                    {
+                    public void onNext(News news) {
 //                        Title.clear();
                         Random random = new Random();
                         int k = random.nextInt(8);
@@ -119,19 +134,18 @@ public class NewsActivity extends AppCompatActivity{
                         Title2[4] = news.getData().getDy().get(k).getPicInfo().get(0).getUrl();
                         Title2[5] = news.getData().getWar().get(k).getPicInfo().get(0).getUrl();
                         Title2[6] = news.getData().getEnt().get(k).getPicInfo().get(0).getUrl();
-                        try{
-                        Text[0]=setNewsText(news.getData().getAuto().get(k).getLink());
-                        Text[1]=setNewsText(news.getData().getTech().get(k).getLink());
-                            Text[2]=setNewsText(news.getData().getMoney().get(k).getLink());
-                            Text[3]=setNewsText(news.getData().getSports().get(k).getLink());
-                            Text[4]=setNewsText(news.getData().getDy().get(k).getLink());
-                            Text[5]=setNewsText(news.getData().getWar().get(k).getLink());
-                            Text[6]=setNewsText(news.getData().getEnt().get(k).getLink());
-                        }
-                        catch (InterruptedException e) {
+                        try {
+                            Text[0] = setNewsText(news.getData().getAuto().get(k).getLink());
+                            Text[1] = setNewsText(news.getData().getTech().get(k).getLink());
+                            Text[2] = setNewsText(news.getData().getMoney().get(k).getLink());
+                            Text[3] = setNewsText(news.getData().getSports().get(k).getLink());
+                            Text[4] = setNewsText(news.getData().getDy().get(k).getLink());
+                            Text[5] = setNewsText(news.getData().getWar().get(k).getLink());
+                            Text[6] = setNewsText(news.getData().getEnt().get(k).getLink());
+                        } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        String[] Title3={"auto","tech","money","sports","dy","war","ent"};
+                        String[] Title3 = {"汽车", "科技", "金融", "体育", "娱乐", "军事", "影视"};
                         for (int i = 0; i < 7; i++) {
                             Log.i("title1:", Title1[i]);
                             Log.i("title2", Title2[i]);
@@ -142,61 +156,67 @@ public class NewsActivity extends AppCompatActivity{
                             newsTitle.setNewsText(Text[i]);
                             mNews.add(newsTitle);
                         }
+                        hintText.setVisibility(View.GONE);
                         newsAdapter.notifythis();
                     }
 
                 });
     }
 
-    public String setNewsText(final String url) throws InterruptedException
-    {
-       NewsThread newsThread=new NewsThread(url);
-       newsThread.start();
-       newsThread.join();
-       return newsThread.NewsText;
+    public String setNewsText(final String url) throws InterruptedException {
+        NewsThread newsThread = new NewsThread(url);
+        newsThread.start();
+        newsThread.join();
+        return newsThread.NewsText;
     }
 
-    public class NewsThread extends Thread{
+    public class NewsThread extends Thread {
         private String NewsText;
         private String url;
 
-        public NewsThread(String url)
-        {
-            this.url=url;
+        public NewsThread(String url) {
+            this.url = url;
         }
 
         @Override
         public void run() {
             super.run();
-            try{
+            try {
                 Document doc = Jsoup.connect(url).get();
                 Elements elements = doc.getElementsByTag("p");
                 //实例化stringbuffer
-                StringBuffer buffer =new StringBuffer();
+                StringBuffer buffer = new StringBuffer();
                 for (Element link : elements) {
-                    buffer.append(link.text().trim()+'\n');
+                    buffer.append(link.text().trim() + '\n');
                 }
-                NewsText=buffer.toString();
-            }catch(Exception e) {
+                NewsText = buffer.toString();
+            } catch (Exception e) {
                 Log.i("mytag", e.toString());
             }
         }
     }
 
-    public int[] getSize(int[] a)
-    {
-        int i=0;
-        int b[]=new int[10];
-        HashMap<Integer,Integer> hashMap=new HashMap<Integer,Integer>();
-        while(i<10) {
+    public int[] getSize(int[] a) {
+        int i = 0;
+        int b[] = new int[10];
+        HashMap<Integer, Integer> hashMap = new HashMap<Integer, Integer>();
+        while (i < 10) {
             Random random = new Random();
             int num = random.nextInt(a.length);
             if (!hashMap.containsKey(a[num])) {
                 b[i] = a[num];
-                hashMap.put(a[num],a[num]);
+                hashMap.put(a[num], a[num]);
                 i++;
             }
         }
         return b;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
